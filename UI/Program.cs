@@ -77,10 +77,10 @@ while (running)
             Console.ReadLine();
             break;
         case "4. Hitta mögelrisken per dag fallande":
-            var MoldRiskDays = service.GetDaysByIndoorMoldRisk();
+            var MoldRiskDays = service.GetDaysByMoldRisk();
             foreach (var day in MoldRiskDays)
             {
-                Console.WriteLine($"Datum: {day.Datum.ToLongDateString()}, Mögelriskpoäng: {day.Value}");
+                Console.WriteLine($"Datum: {day.Datum.ToLongDateString()}, Mögelriskpoäng: {day.Value:F2}");
             }
             Console.ReadLine();
             break;

@@ -61,26 +61,28 @@ namespace Core
                 .ToList();
         }
 
-        public IEnumerable<DailySummary> GetDaysByIndoorMoldRisk(
-    int limit = 10,
-    double tempThreshold = 10.0,     // Fick fram på nätet att mögelrisk ökar vid över 15°C och över 75% luftfuktighet
-    double humidityThreshold = 75.0) 
+        public IEnumerable<DailySummary> GetDaysByMoldRisk(string plats = "Inne")
         {
             return _weatherRepository.GetQueryable()
-                //.Where(w => w.Plats == "Inne") Trodde först att det bara skulle vara inomhus, men det fanns inte ett ända luftfuktighetsvärde över 75% inomhus i datan, satt det får bli såhär
+                .Where(w => w.Plats == plats)
                 .Select(w => new
                 {
                     w.Datum.Date,
-                    MoldRiskScore = (w.Temp > tempThreshold && w.Luftfuktighet > humidityThreshold) ? 1.0 : 0.0 // Poängsättning: 1 för risk, 0 för ingen risk
+                    //Fick fram att mögelrisken kan man räkna Riskvärde = Luftfuktighet + Temp * 0.5
+                    //Om temperaturen är under 0 grader så är risken 0
+                    //I datan vi har så är inte risken direkt hög nån gång inomhus, så om vi kan sätta in utomhus om vi vill se högre riskvärden
+                    //Lågt värde är ungefär 30-50, då finns ingen risk
+                    RiskScore = (w.Temp < 0) ? 0 : (w.Luftfuktighet * 1.0) + (w.Temp * 0.5)
                 })
-                .GroupBy(a => a.Date)
+                .GroupBy(x => x.Date)
                 .Select(g => new DailySummary
                 {
                     Datum = g.Key,
-                    Value = g.Average(a => a.MoldRiskScore)
+                    // Vi tar medelvärdet av riskpoängen för hela dagen
+                    Value = g.Average(x => x.RiskScore)
                 })
-                .OrderByDescending(s => s.Value) // Högst risk först
-                .Take(limit)
+                .OrderByDescending(s => s.Value) // Sortera så "farligast" dagar kommer först
+                .Take(20)
                 .ToList();
         }
     }
