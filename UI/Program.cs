@@ -25,7 +25,7 @@ if (!context.Weathers.Any())
 }
 Console.WriteLine("Databas skapad, om den inte redan fanns!");
 //Skapa service för att kunna kalla på metoderna
-var service = new Core.WeatherService(weatherRepo);
+var service = new Core.WeatherService(weatherRepo); // Skickar in vår repository
 
 
 
@@ -34,7 +34,7 @@ while (running)
     Console.Clear();
     var choice = AnsiConsole.Prompt(
     new SelectionPrompt<string>()
-        .Title("Välj vilken uppgift du vill köra:\nOBS det visar max 20 resultat, det blir alldeles för mycket annars")
+        .Title("Välj vilken uppgift du vill köra:\nOBS det visar max 20 resultat som standard, det blir alldeles för mycket annars. Om man kallar metoden kan man ange vilken limit det skall vara")
         .PageSize(10)
         .AddChoices(new[]
         {

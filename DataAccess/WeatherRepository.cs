@@ -5,6 +5,7 @@ using Core.Models;
 
 namespace DataAccess
 {
+    // Repository för väderdata
     public class WeatherRepository : IWeatherRepository
     {
         private readonly EFContext _context;

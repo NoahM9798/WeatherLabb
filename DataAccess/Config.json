@@ -1,4 +1,4 @@
-//H‰r fylls connectionen stringen till SQL Server databasen i, samt namnet pÂ CSV filen som ska l‰sas in.
+//H√§r fylls connectionen stringen till SQL Server databasen i, samt namnet p√• CSV filen som ska l√§sas in.
 {
   "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=WeatherDB;Trusted_Connection=True;",
   "CSVFileName": "TempFuktData.csv"

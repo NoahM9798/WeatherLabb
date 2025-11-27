@@ -31,7 +31,7 @@ namespace Core
             return averageTemperedTemperature;
         }
 
-        public IEnumerable<DailySummary> GetAverageTemperatureDesc()
+        public IEnumerable<DailySummary> GetAverageTemperatureDesc(int limit = 20)
         {
             return _weatherRepository.GetQueryable()
                 .Where(w => w.Plats == "Inne")
@@ -42,11 +42,11 @@ namespace Core
                     Value = g.Average(w => w.Temp)
                 })
                 .OrderByDescending(ds => ds.Value)
-                .Take(20)
+                .Take(limit)
                 .ToList();
         }
 
-        public IEnumerable<DailySummary> GetAverageHumidityAsc()
+        public IEnumerable<DailySummary> GetAverageHumidityAsc(int limit = 20)
         {
             return _weatherRepository.GetQueryable()
                 .Where(w => w.Plats == "Ute")
@@ -57,11 +57,11 @@ namespace Core
                     Value = g.Average(w => w.Luftfuktighet)
                 })
                 .OrderBy(ds => ds.Value)
-                .Take(20)
+                .Take(limit)
                 .ToList();
         }
 
-        public IEnumerable<DailySummary> GetDaysByMoldRisk(string plats = "Inne")
+        public IEnumerable<DailySummary> GetDaysByMoldRisk(string plats = "Inne", int limit = 20)
         {
             return _weatherRepository.GetQueryable()
                 .Where(w => w.Plats == plats)
@@ -82,7 +82,7 @@ namespace Core
                     Value = g.Average(x => x.RiskScore)
                 })
                 .OrderByDescending(s => s.Value) // Sortera så "farligast" dagar kommer först
-                .Take(20)
+                .Take(limit)
                 .ToList();
         }
     }
